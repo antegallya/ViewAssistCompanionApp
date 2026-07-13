@@ -3,12 +3,12 @@ package com.msp1974.vacompanion.settings
 import android.annotation.SuppressLint
 import android.content.Context
 import android.content.SharedPreferences
+import android.content.pm.PackageManager
 import android.os.Build
 import android.os.Build.UNKNOWN
 import android.provider.Settings.Secure
 import androidx.preference.PreferenceManager
 import androidx.core.content.edit
-import com.google.android.gms.common.util.ClientLibraryUtils.getPackageInfo
 import com.msp1974.vacompanion.data.AvailableAlarm
 import com.msp1974.vacompanion.data.AvailableWakeSound
 import com.msp1974.vacompanion.utils.Event
@@ -22,6 +22,15 @@ import java.util.UUID
 import javax.inject.Inject
 import kotlin.properties.Delegates
 import kotlin.reflect.KProperty
+
+// Local replacement for com.google.android.gms.common.util.ClientLibraryUtils.getPackageInfo:
+// this file is shared by both the "google" and "googlefree" flavors, and the latter has no
+// Google Play Services on its classpath, so it can't reference GMS classes here.
+private fun getPackageInfo(context: Context, packageName: String) = try {
+    context.packageManager.getPackageInfo(packageName, 0)
+} catch (e: PackageManager.NameNotFoundException) {
+    null
+}
 
 enum class BackgroundTaskStatus {
     NOT_STARTED,

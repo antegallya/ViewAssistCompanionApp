@@ -53,6 +53,17 @@ android {
         }
     }
 
+    flavorDimensions += "distribution"
+
+    productFlavors {
+        create("google") {
+            dimension = "distribution"
+        }
+        create("googlefree") {
+            dimension = "distribution"
+        }
+    }
+
     buildTypes {
         debug {
             isMinifyEnabled = false
@@ -108,9 +119,11 @@ dependencies {
     implementation(libs.androidx.material3)
     implementation(libs.material3)
     implementation(libs.core.splashscreen)
-    implementation(platform(libs.firebase.bom))
-    implementation(libs.firebase.analytics)
-    implementation(libs.firebase.crashlytics.ndk)
+    // Firebase — only for the "google" flavor
+    "googleImplementation"(platform(libs.firebase.bom))
+    "googleImplementation"(libs.firebase.analytics)
+    "googleImplementation"(libs.firebase.crashlytics.ndk)
+    implementation(libs.androidx.localbroadcastmanager)
     implementation (libs.androidx.material.icons.extended)
     implementation (libs.androidx.preference.ktx)
     implementation (libs.timber)
@@ -146,7 +159,8 @@ dependencies {
     implementation(libs.androidx.media3.exoplayer.dash)
     implementation(libs.androidx.media3.ui)
     implementation(libs.androidx.media3.ui.compose)
-    implementation(libs.mlkit.face.detection)
+    // MLKit face detection pulls in Google Play Services — only for the "google" flavor
+    "googleImplementation"(libs.mlkit.face.detection)
     implementation(libs.jtransforms)
     implementation(libs.hilt.android)
     ksp(libs.hilt.android.compiler)
