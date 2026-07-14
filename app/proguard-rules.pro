@@ -27,3 +27,11 @@
 -dontwarn org.conscrypt.OpenSSLProvider
 
 -keep class ai.onnxruntime.** { *; }
+
+# WorkManager uses Room internally; Room resolves its generated DB impl via
+# reflection (Class.forName), which R8 full mode can strip/rename since nothing
+# else references it directly. Previously masked in the "google" flavor because
+# Firebase/MLKit's consumer proguard rules incidentally kept these classes too.
+-keep class * extends androidx.room.RoomDatabase
+-keep class androidx.work.impl.WorkDatabase_Impl { *; }
+-keep class androidx.work.impl.model.** { *; }
